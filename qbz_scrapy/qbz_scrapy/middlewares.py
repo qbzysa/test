@@ -27,6 +27,7 @@ class RandomUserAgent(object):
 
 class ProxyMiddleware(object):
     def process_request(self, request, spider):
-        proxy = random.choice(PROXY_LIST)
-        print proxy
-        request.meta['proxy'] = "http://%s" % proxy['ip_port']
+        if spider.name == 'carlogo':
+            proxy = random.choice(PROXY_LIST)
+            print proxy
+            request.meta['proxy'] = "http://%s" % proxy['ip_port']
