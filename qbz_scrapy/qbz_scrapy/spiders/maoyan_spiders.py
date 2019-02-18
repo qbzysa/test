@@ -15,7 +15,7 @@ class MaoyanSpider(scrapy.Spider):
 
     def clear_data(self):
         conn = MySQLdb.connect(host='127.0.0.1', port=3306, user='root', passwd='123456',
-                               db='test', charset='utf-8')
+                               db='test', charset='utf8')
         # 建立游标对象
         cursor = conn.cursor()
         cursor.execute('truncate table maoyan')
