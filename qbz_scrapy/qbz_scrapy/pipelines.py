@@ -16,7 +16,7 @@ class QbzScrapyPipeline(object):
     def __init__(self):
         # 连接数据库
         self.conn = MySQLdb.connect(host='127.0.0.1', port=3306, user='root', passwd='123456',
-                                    db='test')
+                                    db='test', charset='utf8')
         # 建立游标对象
         self.cursor = self.conn.cursor()
         self.file = codecs.open('logo.json', 'w', encoding='utf-8')
@@ -49,10 +49,13 @@ class QbzScrapyPipeline(object):
 
 
 class DownloadImagesPipeline(ImagesPipeline):
-    # 添加meta是为了下面重命名文件名使用
-    def get_media_requests(self, item, info):
-        for image_url in item['imageurl']:
-            yield Request("http:"+image_url, meta={'item': item, 'index': item['imageurl'].index(image_url)})
+    try:
+        # 添加meta是为了下面重命名文件名使用
+        def get_media_requests(self, item, info):
+            for image_url in item['imageurl']:
+                yield Request("http:"+image_url, meta={'item': item, 'index': item['imageurl'].index(image_url)})
+    except Exception as e:
+        print e
 
     def file_path(self, request, response=None, info=None):
         # 通过上面的meta传递过来item
