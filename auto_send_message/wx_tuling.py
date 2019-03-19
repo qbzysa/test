@@ -12,7 +12,7 @@ tmp = bot.friends().search(u'我的未来不是你！')[0]
 # 调用图灵机器人API，发送消息并获得机器人的回复
 def auto_reply(text):
     url = "http://www.tuling123.com/openapi/api"
-    api_key = "003b1af8edc14394a6558dd1afc77cad"
+    api_key = "******************"
     payload = {
         "key": api_key,
         "info": text,
