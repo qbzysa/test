@@ -1,0 +1,165 @@
+from elasticsearch2 import Elasticsearch, helpers
+import pandas as pd
+import MySQLdb
+import os
+import json
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
+# #############设置es连接默认值###########
+es = Elasticsearch([{'host': '127.0.0.1', 'port': 19200}])
+# #############设置mysql连接默认值###########
+host = '192.168.16.240'
+port = 63306
+db = 'ezlink'
+user = 'es'
+password = '123456'
+# #############设置导出的文件保存路径默认值###########
+save_path = 'F:\\es_json'
+
+
+class ExportData_By_Es(object):
+    def __init__(self, es_con, index_name, type_name, value):
+        """
+        通过es连接信息，索引名，列表名，字段列表获取相应数据，数据类型为DataFrame
+        :param es_con:      es连接信息
+        :param index_name:  索引名index
+        :param type_name:   列表名doc_type
+        :param value:       字段列表
+        """
+        self.con = es_con
+        self.index = index_name
+        self.type = type_name
+        self.fields = value
+        self.filenames = self.get_json_file()
+        self.datas = self.data_to_dataFrame()
+
+    def get_json_file(self):
+        """
+        获取es某张表里面的所有数据写入json文件,返回json文件列表
+        """
+        # 将数据进行scroll分页#####
+        querydata = self.con.search(index=self.index, doc_type=self.type, fields=self.fields,
+                                    params={"scroll": "20m", "size": 10000, "timeout": "10m"})
+        scroll_id = querydata["_scroll_id"]
+        total = querydata["hits"]["total"]
+        mdata = querydata['hits']['hits']
+        print "**************开始将短信数据导出到json文件************"
+        json_file = []
+        mdata_df = pd.DataFrame(mdata)
+        with open(os.path.join(save_path, '0.json'), 'w') as f:
+            f.write(json.dumps(list(mdata_df['fields'].values), ensure_ascii=False, encoding='utf-8'))
+            json_file.append(os.path.join(save_path, '0.json'))
+        for i in range(int(total/10000)):
+            res = self.con.scroll(scroll_id=scroll_id, scroll='20m', params={"timeout": "10m"})
+            hits = res['hits']['hits']
+            num_df = pd.DataFrame(hits)
+            with open(os.path.join(save_path, '%s.json') % (i+1), 'w') as f:
+                f.write(json.dumps(list(num_df['fields'].values), ensure_ascii=False, encoding='utf-8'))
+                json_file.append(os.path.join(save_path, '%s.json') % (i+1))
+        print "**************将短信数据导出到json文件成功************"
+        return json_file
+
+    def data_to_dataFrame(self):
+        """
+        将es某张表数据按照指定字段转化成DataFrame类型数据
+        """
+        df_data = pd.DataFrame()
+        for fil in self.filenames:
+            df_tmp = pd.read_json(fil)
+            df_data = df_data.append(df_tmp, ignore_index=True)
+            os.remove(fil)
+        for field in self.fields:
+            df_data[field] = df_data[field].apply(lambda x: x[0])
+        return df_data
+
+
+class ExportData_By_Mysql(object):
+    def __init__(self):
+        """
+        通过mysql查询获取所有的mac和设备关系人信息,数据类型为DataFrame
+        """
+        self.host = host
+        self.port = port
+        self.db = db
+        self.user = user
+        self.password = password
+        self.mac_data = self.mysqldata_to_dataFrame()
+
+    def get_mysql_con(self):
+        """
+        建立mysql连接
+        :return:
+        """
+        conn = MySQLdb.connect(host=self.host, user=self.user, passwd=self.password, db=self.db, port=self.port,
+                               charset="utf8")
+        return conn
+
+    def query_data(self):
+        """查询mysql指定表中所有的mac和设备关系人信息"""
+        conn = self.get_mysql_con()
+        cur = conn.cursor()
+        try:
+            sql = "select a.PK_DEVICE_ID,a.FK_UNIT_CODE, a.FK_UNIT_NAME, a.MAC, c.XM, c.ZJLXMC, c.ZJLXHM " \
+                  "from (cm_device as a left join cm_device_involved as b on a.PK_DEVICE_ID=b.FK_DEVICE_ID) " \
+                  "left join cm_involved as c on b.FK_INVOLVED_ID =c.PK_INVOLVED_ID"
+            cur.execute(sql)
+            # 获取所有记录列表
+            results = cur.fetchall()
+        except Exception as e:
+            print e.message
+            results = None
+        cur.close()
+        conn.close()
+        return results
+
+    def mysqldata_to_dataFrame(self):
+        """
+        将查询到的mysql数据转化成DataFrame类型数据
+        :return:
+        """
+        data = []
+        value = self.query_data()
+        if value:
+            for row in value:
+                one = {}
+                one['PK_DEVICE_ID'] = row[0]
+                one['FK_UNIT_CODE'] = row[1]
+                one['FK_UNIT_NAME'] = row[2]
+                one['MAC'] = row[3]
+                one['XM'] = row[4]
+                one['ZJLXMC'] = row[5]
+                one['ZJLXHM'] = row[6]
+                data.append(one)
+            df = pd.DataFrame(data)
+            df['MAC'] = df['MAC'].apply(lambda x: "'" + x if x else None)
+            df['ZJLXHM'] = df['ZJLXHM'].apply(lambda x: "'" + x if x else None)
+            df['FK_UNIT_CODE'] = df['FK_UNIT_CODE'].apply(lambda x: "'" + x if x else None)
+        else:
+            df = pd.DataFrame()
+        return df
+
+
+def sub_data_to_csv(df):
+    """
+    将DataFrame类型源数据,以每50000条进行分割,写入csv文件
+    :param df: DataFrame类型源数据
+    :return:
+    """
+    total = len(df)
+    integer = total/50000
+    remainder = total % 50000
+    for j in range(integer):
+        start = j*50000
+        end = (j+1)*50000
+        df_sub = df.iloc[start:end]
+        df_sub.to_csv(os.path.join(save_path, 'mac_sms_%s.csv' % j), index=False, encoding="utf_8_sig")
+    if remainder != 0:
+        start = integer*50000
+        end = integer*50000+remainder
+        df_sub = df.iloc[start:end]
+        df_sub.to_csv(os.path.join(save_path, 'mac_sms_%s.csv' % integer), index=False, encoding="utf_8_sig")
+  
+if __name__ == "__main__":
+      pass
