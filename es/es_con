@@ -10,11 +10,11 @@ sys.setdefaultencoding('utf-8')
 # #############设置es连接默认值###########
 es = Elasticsearch([{'host': '127.0.0.1', 'port': 19200}])
 # #############设置mysql连接默认值###########
-host = '192.168.16.240'
-port = 63306
-db = 'ezlink'
-user = 'es'
-password = '123456'
+host = '127.0.0.1'
+port = 3306
+db = '****'
+user = '****'
+password = '****'
 # #############设置导出的文件保存路径默认值###########
 save_path = 'F:\\es_json'
 
