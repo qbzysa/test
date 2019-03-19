@@ -39,7 +39,7 @@ def email_test():
     # att["Content-Disposition"] = 'attachment; filename="test.html")'
     msg.attach(att)
 
-    smtp.sendmail('2541183419@qq.com', 'qiubenzhao@pansafe.com', msg.as_string())
+    smtp.sendmail('****', '****', msg.as_string())
     smtp.quit()
 
 
