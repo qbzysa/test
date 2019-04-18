@@ -1,0 +1,42 @@
+<MESSAGE>
+	<DATASET name="" rmk="">
+		<DATA>
+			<DATASET name="" rmk="">
+        <DATA>
+          <ITEM key="" rmk="" val=""/>
+          <ITEM key="" rmk="" val=""/>
+          <ITEM key="" rmk="" val=""/>
+          <ITEM key="" rmk="" val=""/>
+          <ITEM key="" rmk="" val=""/>
+          <ITEM key="" rmk="" val=""/>
+          <ITEM key="" rmk="" val=""/>
+          <ITEM key="" rmk="" val=""/>
+          <DATASET name="" rmk="">
+            <DATA>
+              <ITEM key="PK_ID" rmk="主键ID" val="82D29875752F556C958651F221F12191"/>
+              <ITEM key="" rmk="" val=""/>
+              <ITEM key="" rmk="" val=""/>
+            </DATA>
+          </DATASET>
+          <DATASET name="" rmk="">
+            <DATA>
+              <ITEM chn="" eng="" key="" rmk=""/>
+              <ITEM chn="" eng="" key="" rmk=""/>
+              <ITEM chn="" eng="" key="" rmk=""/>
+              <ITEM chn="" eng="" key="" rmk=""/>
+              <ITEM chn="" eng="" key="" rmk=""/>
+              <ITEM chn="" eng="" key="" rmk=""/>
+              <ITEM chn="" eng="" key="" rmk=""/>
+              <ITEM chn="" eng="" key="" rmk=""/>
+              <ITEM chn="" eng="" key="" rmk=""/>
+              <ITEM chn="" eng="" key="" rmk=""/>
+              <ITEM chn="" eng="" key="" rmk=""/>
+              <ITEM chn="" eng="" key="" rmk=""/>
+              <ITEM chn="" eng="" key="" rmk=""/>
+            </DATA>
+          </DATASET>
+        </DATA>
+      </DATASET>
+		</DATA>
+	</DATASET>
+</MESSAGE>
