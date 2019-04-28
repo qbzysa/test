@@ -27,8 +27,7 @@ class TestSpider(scrapy.Spider):
             url = "http://glidedsky.com/level/web/crawler-font-puzzle-1?page=%s" % i
             yield scrapy.Request(url=url, callback=self.parse, cookies=self.gs.cookies)
             time.sleep(2)
-        print(sum(self.data))
-        print(len(self.data))
+            
 
     def parse(self, response):
         # 获取字体文件的url
@@ -52,3 +51,5 @@ class TestSpider(scrapy.Spider):
             name = int(hundred)*100+10*int(ten)+int(one)
             print('n', name)
             self.data.append(int(name))
+        print(sum(self.data))
+        print(len(self.data))
