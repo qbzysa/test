@@ -2,7 +2,7 @@
 # __author__:'Administrator'
 # @Time    : 2018/8/24 9:27
 import scrapy
-from GS_login import GlideSky
+from auto_test.GS_login import GlideSky
 import re
 import requests
 from change_font.get_font import get_font
