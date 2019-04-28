@@ -37,9 +37,9 @@ class GlideSky(object):
         :return:
         """
         self.driver.find_element_by_id("email").clear()
-        self.driver.find_element_by_id("email").send_keys("2541183419@qq.com")
+        self.driver.find_element_by_id("email").send_keys("********")
         self.driver.find_element_by_id("password").clear()
-        self.driver.find_element_by_id("password").send_keys("pansafe123456")
+        self.driver.find_element_by_id("password").send_keys("********")
         self.driver.find_element_by_css_selector(".btn.btn-primary").click()
         cookies = self.driver.get_cookies()
         ck = {}
