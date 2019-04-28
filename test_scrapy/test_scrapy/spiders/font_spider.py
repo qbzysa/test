@@ -9,6 +9,7 @@ from change_font.get_font import get_font
 import os
 import time
 
+#字体反爬
 headers = {
             "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) "
               "Chrome/66.0.3359.139 Safari/537.36 "
