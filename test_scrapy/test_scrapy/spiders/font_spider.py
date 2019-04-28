@@ -15,8 +15,8 @@ headers = {
     }
 
 
-class TestSpider(scrapy.Spider):
-    name = "test"
+class FontSpider(scrapy.Spider):
+    name = "font_spider"
     gs = GlideSky()
     data = []
     num_dict = {'0': 'zero', '1': 'one', '2': 'two', '3': 'three', '4': 'four',
