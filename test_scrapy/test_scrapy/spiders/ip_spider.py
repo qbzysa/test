@@ -2,7 +2,7 @@
 # __author__:'Administrator'
 # @Time    : 2019/4/29 14:21
 import scrapy
-from GS_login import GlideSky
+from auto_test.GS_login import GlideSky
 import re
 import os
 import time
@@ -20,8 +20,7 @@ class IpSpider(scrapy.Spider):
     data = []
     proxy_list = ['http://148.70.254.52:52836',
                   'http://116.209.63.249:9999',
-                  'http://180.175.90.14:8060',
-                  ]
+                  'http://180.175.90.14:8060']
 
     def start_requests(self):
         for i in range(1, 1001):
@@ -39,11 +38,3 @@ class IpSpider(scrapy.Spider):
             print(name)
             self.data.append(int(name))
         print(sum(self.data))
-
-    def Processing_JS(self, css_data):
-        """
-        对js_data进行处理
-        :Js_data:  Js数据列表
-        :return:
-        """
-        pass
