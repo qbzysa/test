@@ -1,1 +1,1 @@
-爬虫过程中对字体反爬和css反爬的处理
+http://glidedsky.como爬虫任务实践（字体反爬、css反爬等）
