@@ -19,16 +19,18 @@ headers = {
 class JsSpider(scrapy.Spider):
     name = "js_spider"
     gs = GlideSky()
-    data = []
+    data = 0
 
     def start_requests(self):
-        #if os.path.exists('js_data.txt'):
-        #    os.remove('js_data.txt')
-        for i in range(1, 1001):
-            url = "http://glidedsky.com/level/web/crawler-javascript-obfuscation-1?page=%s" % i
-            yield scrapy.Request(url=url, callback=self.parse, cookies=self.gs.cookies)
-        # time.sleep(30)
-        # self.gs.driver.close()
+        try:
+            if os.path.exists('js_data.txt'):
+                os.remove('js_data.txt')
+            for i in range(1, 1001):
+                url = "http://glidedsky.com/level/web/crawler-javascript-obfuscation-1?page=%s" % i
+                yield scrapy.Request(url=url, callback=self.parse, cookies=self.gs.cookies)
+        finally:   
+            time.sleep(200)
+            self.gs.driver.close()
 
     def parse(self, response):
         # 模拟js加密
@@ -40,10 +42,12 @@ class JsSpider(scrapy.Spider):
         # 访问data_url,获取数据
         data_url = 'http://glidedsky.com/api/level/web/crawler-javascript-obfuscation-1/items?page=%s&t=%s&sign=%s' % (p, t, sign)
         req = requests.get(data_url, cookies=self.gs.cookies)
-        print(req.json())
-        print(req.json()['items'])
-        info = req.json()['items']
-        self.data += list(info)
-        print(sum(self.data))
-        with open('js_data.txt', 'a') as f:
-            f.write(str(list(info)) + '\n')
+        if req.json():
+           print(req.json()['items'])
+           info = req.json()['items']
+           self.data += sum(list(info))
+           with open('js_data.txt', 'a') as f:
+               f.write(str(list(info)) + '\n')
+        else:
+            print('Error page=%s' % p)
+        print(self.data)
