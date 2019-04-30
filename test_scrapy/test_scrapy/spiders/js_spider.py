@@ -2,7 +2,7 @@
 # __author__:'Administrator'
 # @Time    : 2018/8/24 9:27
 import scrapy
-from GS_login import GlideSky
+from auto_test.GS_login import GlideSky
 import math
 import requests
 import hashlib
@@ -19,7 +19,6 @@ headers = {
 class JsSpider(scrapy.Spider):
     name = "js_spider"
     gs = GlideSky()
-    css_data = []
     data = []
 
     def start_requests(self):
@@ -28,7 +27,7 @@ class JsSpider(scrapy.Spider):
         for i in range(1, 1001):
             url = "http://glidedsky.com/level/web/crawler-javascript-obfuscation-1?page=%s" % i
             yield scrapy.Request(url=url, callback=self.parse, cookies=self.gs.cookies)
-            time.sleep(5)
+            time.sleep(2)
         time.sleep(5)
         self.gs.driver.close()
 
