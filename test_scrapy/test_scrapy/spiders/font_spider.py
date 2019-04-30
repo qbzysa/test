@@ -19,17 +19,19 @@ headers = {
 class FontSpider(scrapy.Spider):
     name = "font_spider"
     gs = GlideSky()
-    data = []
+    data = 0
     num_dict = {'0': 'zero', '1': 'one', '2': 'two', '3': 'three', '4': 'four',
                 '5': 'five', '6': 'six', '7': 'seven', '8': 'eight', '9': 'nine'}
 
     def start_requests(self):
-        for i in range(1, 1001):
-            url = "http://glidedsky.com/level/web/crawler-font-puzzle-1?page=%s" % i
-            yield scrapy.Request(url=url, callback=self.parse, cookies=self.gs.cookies)
-            time.sleep(2)
-        #time.sleep(5)    
-        #self.gs.driver.close()
+        try:
+            for i in range(1, 1001):
+                url = "http://glidedsky.com/level/web/crawler-font-puzzle-1?page=%s" % i
+                yield scrapy.Request(url=url, callback=self.parse, cookies=self.gs.cookies)
+                time.sleep(2)
+        finally:   
+            time.sleep(200)
+            self.gs.driver.close()
             
 
     def parse(self, response):
@@ -53,6 +55,5 @@ class FontSpider(scrapy.Spider):
 
             name = int(hundred)*100+10*int(ten)+int(one)
             print('n', name)
-            self.data.append(int(name))
-        print(sum(self.data))
-        print(len(self.data))
+            self.data += int(name)
+        print(self.data)
