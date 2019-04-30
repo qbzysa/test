@@ -17,7 +17,6 @@ headers = {
 class CssSpider(scrapy.Spider):
     name = "css_spider"
     gs = GlideSky()
-    css_data = []
     data = []
 
     def start_requests(self):
