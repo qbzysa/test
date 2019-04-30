@@ -17,18 +17,20 @@ headers = {
 class IpSpider(scrapy.Spider):
     name = "ip_spider"
     gs = GlideSky()
-    data = []
+    data = 0
     proxy_list = ['http://148.70.254.52:52836',
                   'http://116.209.63.249:9999',
                   'http://180.175.90.14:8060']
 
     def start_requests(self):
-        for i in range(1, 1001):
-            url = "http://glidedsky.com/level/web/crawler-ip-block-1?page=%s" % i
-            yield scrapy.Request(url=url, callback=self.parse, meta={'proxy': random.choice(self.proxy_list)}, cookies=self.gs.cookies)
-            time.sleep(2)
-        #time.sleep(5)    
-        #self.gs.driver.close()
+        try:
+            for i in range(1, 1001):
+                url = "http://glidedsky.com/level/web/crawler-ip-block-1?page=%s" % i
+                yield scrapy.Request(url=url, callback=self.parse, meta={'proxy': random.choice(self.proxy_list)}, cookies=self.gs.cookies)
+                time.sleep(2)
+        finally:   
+            time.sleep(200)
+            self.gs.driver.close()        
 
     def parse(self, response):
         print(response)
@@ -36,5 +38,5 @@ class IpSpider(scrapy.Spider):
         for li in lis:
             name = li.xpath('text()').extract()[0].strip()
             print(name)
-            self.data.append(int(name))
-        print(sum(self.data))
+            self.data += int(name)
+        print(self.data)
