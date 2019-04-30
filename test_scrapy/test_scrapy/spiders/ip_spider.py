@@ -25,7 +25,6 @@ class IpSpider(scrapy.Spider):
     def start_requests(self):
         for i in range(1, 1001):
             url = "http://glidedsky.com/level/web/crawler-ip-block-1?page=%s" % i
-            print(random.choice(self.proxy_list))
             yield scrapy.Request(url=url, callback=self.parse, meta={'proxy': random.choice(self.proxy_list)}, cookies=self.gs.cookies)
             time.sleep(2)
         time.sleep(5)    
