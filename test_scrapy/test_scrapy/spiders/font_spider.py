@@ -28,6 +28,7 @@ class FontSpider(scrapy.Spider):
             url = "http://glidedsky.com/level/web/crawler-font-puzzle-1?page=%s" % i
             yield scrapy.Request(url=url, callback=self.parse, cookies=self.gs.cookies)
             time.sleep(2)
+        time.sleep(5)    
         self.gs.driver.close()
             
 
