@@ -17,17 +17,19 @@ headers = {
 class CssSpider(scrapy.Spider):
     name = "css_spider"
     gs = GlideSky()
-    data = []
+    data = 0
 
     def start_requests(self):
-        if os.path.exists('css_data.txt'):
-            os.remove('css_data.txt')
-        for i in range(1, 1001):
-            url = "http://glidedsky.com/level/web/crawler-css-puzzle-1?page=%s" % i
-            yield scrapy.Request(url=url, callback=self.parse, cookies=self.gs.cookies)
-            time.sleep(2)
-        #time.sleep(5)
-        #self.gs.driver.close()
+        try:
+            if os.path.exists('css_data.txt'):
+                os.remove('css_data.txt')
+            for i in range(1, 1001):
+                url = "http://glidedsky.com/level/web/crawler-css-puzzle-1?page=%s" % i
+                yield scrapy.Request(url=url, callback=self.parse, cookies=self.gs.cookies)
+                time.sleep(2)
+         finally:   
+            time.sleep(60)
+            self.gs.driver.close()
 
     def parse(self, response):
         # 获取css
@@ -52,7 +54,7 @@ class CssSpider(scrapy.Spider):
                         else:
                             if result[k][1] == '':
                                 name = enable.get(result[k][0])
-                                self.data.append(int(name))
+                                self.data + = int(name)
                                 with open('css_data.txt', 'a') as f:
                                     f.write(name+'\n')
                 if len(lis1):
@@ -62,10 +64,10 @@ class CssSpider(scrapy.Spider):
                             if lis1[n] == m:
                                 st = st + str(lis2[n])
                             continue
-                    self.data.append(int(st))
+                    self.data += int(st)
                     with open('css_data.txt', 'a') as f:
                         f.write(st + '\n')
-        print(sum(self.data))
+        print(self.data)
 
     def Processing_CSS(self, css_data):
         """
