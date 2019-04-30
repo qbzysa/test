@@ -27,8 +27,8 @@ class CssSpider(scrapy.Spider):
                 url = "http://glidedsky.com/level/web/crawler-css-puzzle-1?page=%s" % i
                 yield scrapy.Request(url=url, callback=self.parse, cookies=self.gs.cookies)
                 time.sleep(2)
-         finally:   
-            time.sleep(60)
+        finally:   
+            time.sleep(200)
             self.gs.driver.close()
 
     def parse(self, response):
