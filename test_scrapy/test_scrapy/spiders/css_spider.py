@@ -54,7 +54,7 @@ class CssSpider(scrapy.Spider):
                         else:
                             if result[k][1] == '':
                                 name = enable.get(result[k][0])
-                                self.data + = int(name)
+                                self.data += int(name)
                                 with open('css_data.txt', 'a') as f:
                                     f.write(name+'\n')
                 if len(lis1):
