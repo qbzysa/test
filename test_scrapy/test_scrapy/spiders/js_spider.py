@@ -27,7 +27,7 @@ class JsSpider(scrapy.Spider):
         for i in range(1, 1001):
             url = "http://glidedsky.com/level/web/crawler-javascript-obfuscation-1?page=%s" % i
             yield scrapy.Request(url=url, callback=self.parse, cookies=self.gs.cookies)
-        time.sleep(5)
+        time.sleep(30)
         self.gs.driver.close()
 
     def parse(self, response):
