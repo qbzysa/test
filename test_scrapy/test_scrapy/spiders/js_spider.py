@@ -50,4 +50,6 @@ class JsSpider(scrapy.Spider):
                f.write(str(list(info)) + '\n')
         else:
             print('Error page=%s' % p)
+            error_url = "http://glidedsky.com/level/web/crawler-javascript-obfuscation-1?page=%s" % p
+            yield scrapy.Request(url=error_url, callback=self.parse, cookies=self.gs.cookies)
         print(self.data)
